@@ -1,23 +1,24 @@
-# Veja a versão em Português <a href="README-ptbr.md">aqui</a>
+# Check the English version <a href="README.md">here</a>
 
 ## GitStats
 
-### What is this? 🤔 
-This project is made to get your Github profile/repos stats in a simple way on Discord. 
+### O que é isso? 🤔
+Este projeto foi criado para obter estatísticas do seu perfil/repositórios do Github de forma simples no Discord.
 
-### Where can I acess it? 🖥
-You need to download the files of this repository.
+### Onde posso acessá-lo? 🖥
+Você precisa baixar os arquivos desse diretório.
 
-### Which tecnologies were used to build it? 🚀 
-It currently uses Javascript with NodeJS.
+### Quais tecnologias foram utilizadas para construí-lo? 🚀
+Ele atualmente usa Javascript com NodeJS.
 
-### How to run 🏃
+### Como executar em modo de desenvolvimento 🏃
 
-     Download the files on this repo.
-     Get a discord bot key on <a href="https://discord.com/developers/applications">here</a>.
-     Go to the repo directory on your PC and run "npm install" and "npx nodemon gitstats.mjs".
+    Baixe os arquivos deste repositório.
+    Obtenha uma chave de bot do Discord <a href="https://discord.com/developers/applications">aqui</a>.
+    Vá para o diretório do repositório em seu PC e execute "npm install" e "npx nodemon gitstats.mjs".
 
-### Here are some images of the project running: ⚡️
+### Aqui estão algumas imagens do projeto em execução: ⚡️
+
 
 ![image](https://github.com/RuanEmanuell/challenge_coorlab/assets/113607857/149a1423-ca20-4233-bcf0-6de95d6bfde0)
 ![image](https://github.com/RuanEmanuell/challenge_coorlab/assets/113607857/ac66d150-83d9-46d3-903f-3272545fb28a)
