@@ -15,7 +15,7 @@ client.login(key);
 client.on('messageCreate', async message => {
     const messageText = message.content;
     if (!message.author.bot && messageText.startsWith("!")) {
-        const desiredComand = messageText.substring(0, messageText.indexOf(" "));
+        const desiredComand = messageText.includes(" ") ? messageText.substring(0, messageText.indexOf(" ")) : messageText;
         switch (desiredComand) {
             case "!gitprofile":
                 const desiredProfile = messageText.substring(messageText.indexOf(" ") + 1, messageText.length);
@@ -105,11 +105,10 @@ client.on('messageCreate', async message => {
                     message.reply("Um erro ocorreu. Não consegui encontrar o repositório desejado. Tente novamente ou digite '!gaiahelp' para ver os comandos disponíveis!");
                 }
                 break;
-
             case "!gaiahelp":
                 const embed = new EmbedBuilder()
                     .setColor(0x0099FF)
-                    .setTitle("Comandos disponíveis do Gaia")
+                    .setTitle("Comandos disponíveis do GaiaBot")
                     .setThumbnail("https://i.pinimg.com/originals/b5/1b/78/b51b78ecc9e5711274931774e433b5e6.png")
                     .addFields(
                         { name: "!gitprofile {user_name}", value: "Ver informações de um perfil do Github" },
