@@ -1,4 +1,6 @@
 import { Client, GatewayIntentBits, EmbedBuilder } from "discord.js";
+import { createMessage } from "./utils/message.mjs";
+
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -23,22 +25,22 @@ client.on('messageCreate', async message => {
                     const url = `https://api.github.com/users/${desiredProfile}`
                     const response = await fetch(url);
                     const data = await response.json();
-                    console.log(data);
-                    const embed = new EmbedBuilder()
-                        .setColor(0x0099FF)
-                        .setTitle(`Perfil do(a) ${data.login}`)
-                        .setURL(`https://github.com/${desiredProfile}`)
-                        .setThumbnail("https://i.pinimg.com/originals/b5/1b/78/b51b78ecc9e5711274931774e433b5e6.png")
-                        .addFields(
-                            { name: "Nickname", value: `${data.login}` },
-                            { name: "Nome", value: `${data.name}` },
-                            { name: "Repositórios (Publicos)", value: `${data.public_repos}` },
-                            { name: "Seguidores", value: `${data.followers}` },
-                            { name: "Seguindo", value: `${data.following}` },
-                            { name: "Localização", value: `${data.location}` },
-                            { name: "Website", value: `${data.blog ? data.blog : "Nenhum"}` }
-                        )
-                        .setImage(`${data.avatar_url}`);
+                    const profileFields = [
+                        { name: "Nickname", value: `${data.login}` },
+                        { name: "Nome", value: `${data.name}` },
+                        { name: "Repositórios (Publicos)", value: `${data.public_repos}` },
+                        { name: "Seguidores", value: `${data.followers}` },
+                        { name: "Seguindo", value: `${data.following}` },
+                        { name: "Localização", value: `${data.location ? data.location : "Não informada"}` },
+                        { name: "Website", value: `${data.blog ? data.blog : "Nenhum"}` }
+                    ]
+                    const embed = createMessage({
+                        color: 0x0099FF,
+                        title: `Perfil do(a) ${data.login}`,
+                        url: `https://github.com/${desiredProfile}`,
+                        thumbnail: "https://i.pinimg.com/originals/b5/1b/78/b51b78ecc9e5711274931774e433b5e6.png",
+                        fields: profileFields, image: `${data.avatar_url}`
+                    })
                     await message.reply({ embeds: [embed] });
                 } catch (error) {
                     console.log(error);
@@ -55,20 +57,22 @@ client.on('messageCreate', async message => {
                     if (data.items.length > 0) {
                         for (let i = 0; i < data.items.length && i < 5; i++) {
                             const repo = data.items[i];
-                            const embed = new EmbedBuilder()
-                                .setColor(0x0099FF)
-                                .setTitle(`Repositório ${repo.full_name}`)
-                                .setURL(`${repo.html_url}`)
-                                .setThumbnail("https://i.pinimg.com/originals/b5/1b/78/b51b78ecc9e5711274931774e433b5e6.png")
-                                .addFields(
-                                    { name: "Nome", value: `${repo.name}` },
-                                    { name: "Descrição", value: `${repo.description}` },
-                                    { name: "Criador", value: `${repo.full_name.substring(0, repo.full_name.indexOf('/'))}` },
-                                    { name: "Linguagem principal", value: `${repo.language}` },
-                                    { name: "Criado em", value: `${repo.created_at.substring(0, 10)}` },
-                                    { name: "Ultima vez atualizado em", value: `${repo.pushed_at.substring(0, 10)}` },
-                                    { name: "Website", value: `${repo.homepage ? repo.homepage : "Nenhum"}` }
-                                );
+                            const repoFields = [
+                                { name: "Nome", value: `${repo.name}` },
+                                { name: "Descrição", value: `${repo.description}` },
+                                { name: "Criador", value: `${repo.full_name.substring(0, repo.full_name.indexOf('/'))}` },
+                                { name: "Linguagem principal", value: `${repo.language}` },
+                                { name: "Criado em", value: `${repo.created_at.substring(0, 10)}` },
+                                { name: "Ultima vez atualizado em", value: `${repo.pushed_at.substring(0, 10)}` },
+                                { name: "Website", value: `${repo.homepage ? repo.homepage : "Nenhum"}` }
+                            ]
+                            const embed = createMessage({
+                                color: 0x0099FF,
+                                title: `Repositório ${repo.full_name}`,
+                                url: `${repo.html_url}`,
+                                thumbnail: "https://i.pinimg.com/originals/b5/1b/78/b51b78ecc9e5711274931774e433b5e6.png",
+                                fields: repoFields
+                            })
                             await message.reply({ embeds: [embed] });
                         }
                     }
@@ -85,20 +89,22 @@ client.on('messageCreate', async message => {
                     const url = `https://api.github.com/repos/${desiredUser}/${desiredRepo}`
                     const response = await fetch(url);
                     const data = await response.json();
-                    const embed = new EmbedBuilder()
-                        .setColor(0x0099FF)
-                        .setTitle(`Repositório ${data.full_name}`)
-                        .setURL(`${data.html_url}`)
-                        .setThumbnail("https://i.pinimg.com/originals/b5/1b/78/b51b78ecc9e5711274931774e433b5e6.png")
-                        .addFields(
-                            { name: "Nome", value: `${data.name}` },
-                            { name: "Descrição", value: `${data.description}` },
-                            { name: "Criador", value: `${data.full_name.substring(0, data.full_name.indexOf('/'))}` },
-                            { name: "Linguagem principal", value: `${data.language}` },
-                            { name: "Criado em", value: `${data.created_at.substring(0, 10)}` },
-                            { name: "Ultima vez atualizado em", value: `${data.pushed_at.substring(0, 10)}` },
-                            { name: "Website", value: `${data.homepage ? data.homepage : "Nenhum"}` }
-                        );
+                    const repoFields = [
+                        { name: "Nome", value: `${data.name}` },
+                        { name: "Descrição", value: `${data.description}` },
+                        { name: "Criador", value: `${data.full_name.substring(0, data.full_name.indexOf('/'))}` },
+                        { name: "Linguagem principal", value: `${data.language}` },
+                        { name: "Criado em", value: `${data.created_at.substring(0, 10)}` },
+                        { name: "Ultima vez atualizado em", value: `${data.pushed_at.substring(0, 10)}` },
+                        { name: "Website", value: `${data.homepage ? data.homepage : "Nenhum"}` }
+                    ]
+                    const embed = createMessage({
+                        color: 0x0099FF,
+                        title: `Repositório ${data.full_name}`,
+                        url: `${data.html_url}`,
+                        thumbnail: "https://i.pinimg.com/originals/b5/1b/78/b51b78ecc9e5711274931774e433b5e6.png",
+                        fields: repoFields
+                    })
                     await message.reply({ embeds: [embed] });
                 } catch (error) {
                     console.log(error);
@@ -106,16 +112,18 @@ client.on('messageCreate', async message => {
                 }
                 break;
             case "!gaiahelp":
-                const embed = new EmbedBuilder()
-                    .setColor(0x0099FF)
-                    .setTitle("Comandos disponíveis do GaiaBot")
-                    .setThumbnail("https://i.pinimg.com/originals/b5/1b/78/b51b78ecc9e5711274931774e433b5e6.png")
-                    .addFields(
-                        { name: "!gitprofile {user_name}", value: "Ver informações de um perfil do Github" },
-                        { name: "!gitsearch {repo_name}", value: "Pesquisar repositórios do Github. Em caso de mais de um repositório com o mesmo nome encontrado, serão mostrados os 5 primeiros." },
-                        { name: "!gitrepo {user_name} {repo_name}", value: "Ver informações de um repositório específico de um usuário do Github." },
-                        { name: "!gaiahelp", value: "Ver todos os comandos disponíveis" },
-                    )
+                const commandFields = [
+                    { name: "!gitprofile {user_name}", value: "Ver informações de um perfil do Github" },
+                    { name: "!gitsearch {repo_name}", value: "Pesquisar repositórios do Github. Em caso de mais de um repositório com o mesmo nome encontrado, serão mostrados os 5 primeiros." },
+                    { name: "!gitrepo {user_name} {repo_name}", value: "Ver informações de um repositório específico de um usuário do Github." },
+                    { name: "!gaiahelp", value: "Ver todos os comandos disponíveis" },
+                ];
+                const embed = createMessage({
+                    color: 0x0099FF,
+                    title: "Comandos disponíveis do GaiaBot",
+                    thumbnail: "https://i.pinimg.com/originals/b5/1b/78/b51b78ecc9e5711274931774e433b5e6.png",
+                    fields: commandFields
+                });
                 message.reply({ embeds: [embed] });
                 break;
             default:
