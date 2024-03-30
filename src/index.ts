@@ -1,5 +1,5 @@
 import { Client, GatewayIntentBits, EmbedBuilder } from "discord.js";
-import { createMessage } from "./utils/message.mjs";
+import { createMessage } from "./utils/message.ts";
 
 import dotenv from "dotenv";
 
@@ -103,7 +103,7 @@ client.on('messageCreate', async message => {
                         title: `Repositório ${data.full_name}`,
                         url: `${data.html_url}`,
                         thumbnail: "https://i.pinimg.com/originals/b5/1b/78/b51b78ecc9e5711274931774e433b5e6.png",
-                        fields: repoFields
+                        fields: repoFields,
                     })
                     await message.reply({ embeds: [embed] });
                 } catch (error) {
@@ -122,7 +122,7 @@ client.on('messageCreate', async message => {
                     color: 0x0099FF,
                     title: "Comandos disponíveis do GaiaBot",
                     thumbnail: "https://i.pinimg.com/originals/b5/1b/78/b51b78ecc9e5711274931774e433b5e6.png",
-                    fields: commandFields
+                    fields: commandFields,
                 });
                 message.reply({ embeds: [embed] });
                 break;
