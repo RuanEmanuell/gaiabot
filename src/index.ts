@@ -3,10 +3,6 @@ import { NoSubscriberBehavior, VoiceConnection, createAudioPlayer, createAudioRe
 import { createMessage } from "./utils/message.ts";
 
 import dotenv from "dotenv";
-import ytdl from "ytdl-core";
-import OpusScript from "opusscript";
-import { Readable, Writable } from "stream";
-import {execSync, spawn} from "child_process";
 
 dotenv.config();
 const key = process.env.PRIVATE_KEY;
@@ -130,65 +126,15 @@ client.on('messageCreate', async message => {
                 }
 
                 const requestedSong = messageText.substring(messageText.indexOf(" ") + 1);
-
-                message.reply(requestedSong);
+                
 
                 try {
-                    const stream = ytdl(requestedSong, { filter: "audioonly" });
-
-
-                    const convertedStream = await convertAudioFormat(stream);
-
-                    async function convertAudioFormat(stream: Readable): Promise<Writable> {
-                        return new Promise((resolve, reject) => {
-                            try {
-                                const sox = spawn('sox', [
-                                    '-t', 's16', '-r', '48000', '-c', '2', '-e', 'signed-integer', '-', '-t', 'wav', '-'
-                                ]);
-                                const convertedStream = sox.stdin;
-                                stream.pipe(convertedStream);
-                                resolve(convertedStream);
-                            } catch (error) {
-                                console.error('Erro ao executar o sox:', error);
-                                reject(error);
-                            }
-                        });
-                    }
-                    
-
-                    async function convertStreamToOpus(stream: Writable): Promise<Readable> {
-                        return new Promise((resolve, reject) => {
-                            try {
-                                const command = `ffmpeg -i pipe:0 -f s16le -ar 48000 -ac 2 -f opus -vbr on pipe:1`;
-                                const opusBuffer = execSync(command);
-                                const opusStream = new Readable();
-                                opusStream.push(opusBuffer);
-                                opusStream.push(null);
-                                resolve(opusStream);
-                            } catch (error) {
-                                console.error('Erro ao executar o ffmpeg:', error);
-                                reject(error);
-                            }
-                        });
-                    }
-    
-                    const opusStream = await convertStreamToOpus(convertedStream);
-                    const resource = createAudioResource(opusStream);
-
+   
                     const connection = joinVoiceChannel({
                         channelId: voiceChannel.id,
                         guildId: voiceChannel.guild.id,
                         adapterCreator: voiceChannel.guild.voiceAdapterCreator,
                         selfDeaf: false
-                    });
-
-                    const player = createAudioPlayer({ behaviors: { noSubscriber: NoSubscriberBehavior.Stop } });
-
-                    player.play(resource);
-                    player.on("error", (error) => {
-                        console.error(error);
-                        message.reply("Ocorreu um erro ao tocar a música. Tente novamente.");
-                        connection.destroy();
                     });
 
                 } catch (error) {
